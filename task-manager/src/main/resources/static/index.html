@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tasks — Eulerity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f6f5f2;
+      --surface: #ffffff;
+      --text: #1a1a18;
+      --muted: #5c5b57;
+      --border: #e8e6e0;
+      --accent: #2d4a3e;
+      --accent-soft: #e8f0ec;
+      --danger: #b42318;
+      --danger-soft: #fdecea;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 1px 2px rgba(26, 26, 24, 0.06), 0 4px 12px rgba(26, 26, 24, 0.04);
+      --font: "DM Sans", system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 4rem;
+    }
+
+    header {
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.65rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.35rem 1.45rem;
+      margin-bottom: 1.25rem;
+    }
+
+    section h2 {
+      margin: 0 0 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 0.55rem 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--text);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .row {
+      display: grid;
+      gap: 0.85rem;
+      margin-bottom: 0.85rem;
+    }
+
+    @media (min-width: 540px) {
+      .row.two {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.25rem;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      border: none;
+      padding: 0.55rem 1rem;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fafaf8;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      filter: brightness(1.05);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover:not(:disabled) {
+      background: var(--accent-soft);
+      border-color: transparent;
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.65rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: var(--danger-soft);
+      border-color: transparent;
+    }
+
+    .banner {
+      font-size: 0.85rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .banner.visible {
+      display: block;
+    }
+
+    .banner.error {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border: 1px solid #f5c4c0;
+    }
+
+    .banner.success {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid #c5d9ce;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.75rem;
+      line-height: 1.45;
+    }
+
+    ul.task-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li.task {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    li.task:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    li.task:first-child {
+      padding-top: 0;
+    }
+
+    .task-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin: 0 0 0.25rem;
+      letter-spacing: -0.01em;
+    }
+
+    .task-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .chip {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+      background: #f0eeea;
+      color: var(--muted);
+    }
+
+    .chip.due {
+      background: #e8f0ff;
+      color: #1e3a5f;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .coach-feedback {
+      font-size: 0.92rem;
+      line-height: 1.55;
+      background: #fafaf8;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      margin-top: 0.85rem;
+      display: none;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .coach-feedback.visible {
+      display: block;
+    }
+
+    .coach-feedback.empty-hint {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: -0.15em;
+      margin-right: 0.35rem;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Task manager</h1>
+      <p>Manage tasks locally and use Feedback for AI coaching—prioritized guidance plus a boost of motivation.</p>
+    </header>
+
+    <div id="banner" class="banner" role="status"></div>
+
+    <section aria-labelledby="create-heading">
+      <h2 id="create-heading">New task</h2>
+      <form id="create-form" autocomplete="on">
+        <div class="row">
+          <div>
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required maxlength="500" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="description">Description <span style="font-weight: 400; color: var(--muted)">(optional)</span></label>
+            <textarea id="description" name="description" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="row two">
+          <div>
+            <label for="dueDate">Due date</label>
+            <input type="date" id="dueDate" name="dueDate" required />
+          </div>
+          <div>
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority" required>
+              <option value="LOW">Low</option>
+              <option value="MEDIUM" selected>Medium</option>
+              <option value="HIGH">High</option>
+            </select>
+          </div>
+        </div>
+        <div class="row two">
+          <div>
+            <label for="status">Status</label>
+            <select id="status" name="status" required>
+              <option value="TODO" selected>To do</option>
+              <option value="IN_PROGRESS">In progress</option>
+              <option value="DONE">Done</option>
+            </select>
+          </div>
+          <div style="align-self: end">
+            <span class="visually-hidden" id="submit-create-label">Save new task</span>
+            <div class="actions">
+              <button type="submit" class="btn-primary" id="submit-create" aria-labelledby="submit-create-label">Add task</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section aria-labelledby="list-heading">
+      <h2 id="list-heading">Your tasks</h2>
+      <ul id="task-list" class="task-list"></ul>
+      <div id="empty-state" class="empty" style="display: none">No tasks yet — add one above, then use Feedback for coaching.</div>
+      <div class="actions" style="margin-top: 1rem">
+        <button type="button" class="btn-primary" id="btn-feedback">Feedback</button>
+      </div>
+      <p class="hint" style="margin-top: 0.35rem">
+        Sends your saved tasks to <code style="font-size: 0.8em">POST /tasks/feedback</code> and returns a short prioritized coach paragraph plus encouragement.
+      </p>
+      <div id="coach-feedback" class="coach-feedback" aria-live="polite" role="region" aria-label="Coach feedback"></div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const API = {
+        tasks: "/tasks",
+        feedback: "/tasks/feedback",
+      };
+
+      const $ = (id) => document.getElementById(id);
+      const banner = $("banner");
+
+      function showBanner(kind, message) {
+        banner.className = "banner visible " + (kind === "error" ? "error" : "success");
+        banner.textContent = message;
+        if (kind !== "error") {
+          setTimeout(() => {
+            banner.classList.remove("visible", "success", "error");
+          }, 4200);
+        }
+      }
+
+      function hideBanner() {
+        banner.classList.remove("visible", "error", "success");
+      }
+
+      async function parseError(res) {
+        const t = await res.text();
+        try {
+          return JSON.parse(t).message || t;
+        } catch {
+          return t || res.statusText;
+        }
+      }
+
+      async function loadTasks() {
+        const list = $("task-list");
+        const empty = $("empty-state");
+        try {
+          const res = await fetch(API.tasks);
+          if (!res.ok) throw new Error(await parseError(res));
+          const tasks = await res.json();
+          list.innerHTML = "";
+          if (!tasks.length) {
+            empty.style.display = "block";
+            return;
+          }
+          empty.style.display = "none";
+          tasks.forEach((t) => list.appendChild(renderTask(t)));
+        } catch (e) {
+          showBanner("error", "Could not load tasks: " + e.message);
+        }
+      }
+
+      function renderTask(t) {
+        const li = document.createElement("li");
+        li.className = "task";
+        const due =
+          t.dueDate != null
+            ? new Date(t.dueDate + "T12:00:00").toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })
+            : "—";
+        li.innerHTML =
+          '<div class="task-body">' +
+          '<p class="task-title"></p>' +
+          (t.description ? '<p class="task-desc"></p>' : "") +
+          '<div class="meta">' +
+          '<span class="chip due">' +
+          due +
+          "</span>" +
+          '<span class="chip">' +
+          esc(t.priority) +
+          "</span>" +
+          '<span class="chip">' +
+          formatStatus(t.status) +
+          "</span>" +
+          "</div>" +
+          "</div>";
+        li.querySelector(".task-title").textContent = t.title;
+        if (t.description) li.querySelector(".task-desc").textContent = t.description;
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "btn-danger";
+        del.textContent = "Delete";
+        del.setAttribute("aria-label", "Delete " + t.title);
+        del.addEventListener("click", () => deleteTask(t.id));
+        li.appendChild(del);
+        return li;
+      }
+
+      function esc(s) {
+        const d = document.createElement("div");
+        d.textContent = s == null ? "" : String(s);
+        return d.innerHTML;
+      }
+
+      function formatStatus(s) {
+        const map = { TODO: "To do", IN_PROGRESS: "In progress", DONE: "Done" };
+        return map[s] || s;
+      }
+
+      $("create-form").addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        hideBanner();
+        const body = {
+          title: $("title").value.trim(),
+          dueDate: $("dueDate").value,
+          priority: $("priority").value,
+          status: $("status").value,
+        };
+        const desc = $("description").value.trim();
+        if (desc) body.description = desc;
+        const btn = $("submit-create");
+        btn.disabled = true;
+        try {
+          const res = await fetch(API.tasks, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+          if (!res.ok) throw new Error(await parseError(res));
+          $("create-form").reset();
+          $("priority").value = "MEDIUM";
+          $("status").value = "TODO";
+          defaultDueDate();
+          await loadTasks();
+          showBanner("success", "Task created.");
+        } catch (e) {
+          showBanner("error", e.message);
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      async function deleteTask(id) {
+        if (!confirm("Delete this task?")) return;
+        hideBanner();
+        try {
+          const res = await fetch(API.tasks + "/" + id, { method: "DELETE" });
+          if (!res.ok && res.status !== 204) throw new Error(await parseError(res));
+          await loadTasks();
+          showBanner("success", "Task removed.");
+        } catch (e) {
+          showBanner("error", e.message);
+        }
+      }
+
+      $("btn-feedback").addEventListener("click", async () => {
+        hideBanner();
+        const panel = $("coach-feedback");
+        const btn = $("btn-feedback");
+        const prev = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Working…';
+        try {
+          const res = await fetch(API.feedback, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: "{}",
+          });
+          if (!res.ok) throw new Error(await parseError(res));
+          const data = await res.json();
+          panel.textContent = data.feedback ?? "";
+          panel.classList.remove("empty-hint");
+          panel.classList.add("visible");
+          showBanner("success", "Coach feedback is ready.");
+        } catch (e) {
+          panel.classList.remove("visible");
+          panel.textContent = "";
+          showBanner(
+            "error",
+            e.message +
+              (String(e.message).includes("404") ? " (Is POST /tasks/feedback implemented?)" : "")
+          );
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = prev;
+        }
+      });
+
+      function defaultDueDate() {
+        const d = new Date();
+        d.setDate(d.getDate() + 7);
+        $("dueDate").value = d.toISOString().slice(0, 10);
+      }
+
+      defaultDueDate();
+      loadTasks();
+    })();
+  </script>
+</body>
+</html>
