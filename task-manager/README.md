@@ -132,6 +132,10 @@ curl -s -X POST http://localhost:8080/tasks/feedback -H "Content-Type: applicati
 - `src/main/resources/static/index.html` — reviewer UI  
 - `src/main/resources/application.properties` — H2 + OpenAI placeholders (**no secrets**)  
 
+## AI development transcripts
+
+Per the take-home instructions, conversation transcripts are included alongside this project. They live in the **`transcripts/`** folder at the **repository root** (the main directory that contains `task-manager/` and `transcripts/` as siblings—not inside `task-manager` itself).
+
 ## Design choices
 
 - **H2 in-memory** with `ddl-auto=create-drop` per assessment constraints.  
